@@ -7,7 +7,7 @@ import org.junit.Test
 class DateUtilsTest {
 
     @Test
-    fn testYearMonthParsing() {
+    fun testYearMonthParsing() {
         val parsed = DateUtils.parseYearMonth("2026-09")
         assertNotNull(parsed)
         assertEquals(2026, parsed?.first)
@@ -15,7 +15,7 @@ class DateUtilsTest {
     }
 
     @Test
-    fn testGetDatesForMonthSeptember2026() {
+    fun testGetDatesForMonthSeptember2026() {
         val dates = DateUtils.getDatesForMonth("2026-09")
         assertEquals(30, dates.size)
         assertEquals(1, dates.first().dayOfMonth)
@@ -23,14 +23,14 @@ class DateUtilsTest {
     }
 
     @Test
-    fn testLeapYearFebruary2028() {
+    fun testLeapYearFebruary2028() {
         val dates = DateUtils.getDatesForMonth("2028-02")
         assertEquals(29, dates.size)
         assertEquals(29, dates.last().dayOfMonth)
     }
 
     @Test
-    fn testNonLeapYearFebruary2027() {
+    fun testNonLeapYearFebruary2027() {
         val dates = DateUtils.getDatesForMonth("2027-02")
         assertEquals(28, dates.size)
         assertEquals(28, dates.last().dayOfMonth)

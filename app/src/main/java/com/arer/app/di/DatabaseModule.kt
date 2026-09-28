@@ -30,7 +30,7 @@ object DatabaseModule {
             context,
             ArerDatabase::class.java,
             "arer_app_database"
-        ).fallbackToDestructiveMigration().build()
+        ).addMigrations(ArerDatabase.MIGRATION_1_2).build()
     }
 
     @Provides

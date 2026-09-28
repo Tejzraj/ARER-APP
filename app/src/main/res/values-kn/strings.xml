@@ -8,7 +8,7 @@
     <string name="school_setup_title">ಶಾಲೆಯ ವಿವರಗಳು</string>
     <string name="school_name">ಶಾಲೆಯ ಹೆಸರು</string>
     <string name="school_code">ಶಾಲಾ ಕೋಡ್</string>
-    <string name="udise_code">ಯುಡೈస్ ಕೋಡ್</string>
+    <string name="udise_code">ಯುಡೈಸ್ ಕೋಡ್</string>
     <string name="kgid_number">ಕೆ.ಜಿ.ಐ.ಡಿ ನಂಬರ್</string>
     <string name="district">ಜಿಲ್ಲೆ</string>
     <string name="taluk">ತಾಲ್ಲೂಕು</string>
@@ -34,4 +34,17 @@
     <string name="history">ಇತಿಹಾಸ</string>
     <string name="settings">ಸೆಟ್ಟಿಂಗ್ಸ್</string>
     <string name="logout">ಲಾಗ್ ಔಟ್</string>
+    <string name="daily_mdm_entry">ದೈನಂದಿನ ಬಿಸಿಯೂಟ ನಮೂದು</string>
+    <string name="working_day">ಕೆಲಸದ ದಿನ</string>
+    <string name="sunday">ಭಾನುವಾರ</string>
+    <string name="government_holiday">ಸರ್ಕಾರಿ ರಜೆ</string>
+    <string name="exceptional_day">ವಿಶೇಷ ದಿನ</string>
+    <string name="saved">✓ ಉಳಿಸಲಾಗಿದೆ</string>
+    <string name="missing_entry">ವಿದ್ಯಾರ್ಥಿಗಳ ಸಂಖ್ಯೆ ನಮೂದಿಸಿಲ್ಲ</string>
+    <string name="mark_as_working">ಕೆಲಸದ ದಿನವೆಂದು ಗುರುತಿಸಿ</string>
+    <string name="mark_as_holiday">ರಜೆಯೆಂದು ಗುರುತಿಸಿ</string>
+    <string name="reason">ಕಾರಣ</string>
+    <string name="override_dialog_title">ದಿನದ ಸ್ಥಿತಿ ಬದಲಾಯಿಸಿ</string>
+    <string name="override_dialog_message">ಈ ದಿನವು ಸಾಮಾನ್ಯವಾಗಿ ರಜೆಯಾಗಿರುತ್ತದೆ. ನೀವು ಇದನ್ನು ವಿಶೇಷ ಕೆಲಸದ ದಿನವೆಂದು ಗುರುತಿಸಲು ಬಯಸುವಿರಾ?</string>
+    <string name="rates_not_configured">ದರಗಳನ್ನು ನಿಗದಿಪಡಿಸಲಾಗಿಲ್ಲ</string>
 </resources>

@@ -24,6 +24,7 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val schoolName by viewModel.schoolName.collectAsState()
+    val summary by viewModel.monthlySummary.collectAsState()
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -59,7 +60,7 @@ fun DashboardScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "September 2026",
+                        text = "Current Month",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold
@@ -71,15 +72,15 @@ fun DashboardScreen(
                     ) {
                         Column {
                             Text(stringResource(id = R.string.mdm_days), style = MaterialTheme.typography.bodySmall)
-                            Text("0", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text("${summary.mdmDays}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         }
                         Column {
                             Text(stringResource(id = R.string.students_served), style = MaterialTheme.typography.bodySmall)
-                            Text("0", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text("${summary.studentsServed}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         }
                         Column {
                             Text(stringResource(id = R.string.estimated_amount), style = MaterialTheme.typography.bodySmall)
-                            Text("₹0.00", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(id = R.string.rates_not_configured), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))

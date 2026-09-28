@@ -14,7 +14,7 @@ data class DailyMDMEntryEntity(
     val id: Long = 0L,
     val date: Long, // Epoch timestamp at start of day
     val yearMonth: String, // e.g. "2026-09"
-    val studentCount: Int,
+    val studentCount: Int?, // Nullable: null = missing entry, 0+ = actual served count
     val status: DailyEntryStatus,
     val isOverridden: Boolean = false,
     val overrideReason: String?,

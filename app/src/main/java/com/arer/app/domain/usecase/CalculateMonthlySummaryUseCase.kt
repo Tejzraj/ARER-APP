@@ -21,26 +21,16 @@ class CalculateMonthlySummaryUseCase @Inject constructor() {
         var totalMdmDays = 0
 
         for (day in days) {
-            val isWorking = when (day.status) {
-                DailyEntryStatus.NORMAL -> true
-                DailyEntryStatus.OVERRIDDEN -> day.isOverridden && (day.studentCount != null && day.studentCount > 0 || day.status == DailyEntryStatus.OVERRIDDEN)
-                DailyEntryStatus.SUNDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> false
-            }
-
-            // Determine if it's an applicable MDM day (Working day or Overridden working day)
             val isMdmDay = when (day.status) {
                 DailyEntryStatus.NORMAL -> true
                 DailyEntryStatus.OVERRIDDEN -> true
-                DailyEntryStatus.SUNDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> day.isOverridden
-            }
-
-            if (isWorking) {
-                workingDays++
+                DailyEntryStatus.HOLIDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> day.isOverridden
             }
 
             if (isMdmDay) {
                 totalMdmDays++
                 mdmDays++
+                workingDays++
                 if (day.studentCount != null) {
                     completedCount++
                     studentsServed += day.studentCount

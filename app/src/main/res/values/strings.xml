@@ -34,4 +34,17 @@
     <string name="history">History</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
+    <string name="daily_mdm_entry">Daily MDM Entry</string>
+    <string name="working_day">Working Day</string>
+    <string name="sunday">Sunday</string>
+    <string name="government_holiday">Government Holiday</string>
+    <string name="exceptional_day">Exceptional Day</string>
+    <string name="saved">✓ Saved</string>
+    <string name="missing_entry">Student count not entered</string>
+    <string name="mark_as_working">Mark as Working Day</string>
+    <string name="mark_as_holiday">Mark as Holiday</string>
+    <string name="reason">Reason</string>
+    <string name="override_dialog_title">Override Day Status</string>
+    <string name="override_dialog_message">This date is normally a non-working day. Do you want to mark this date as an exceptional working day?</string>
+    <string name="rates_not_configured">Rates not configured</string>
 </resources>
