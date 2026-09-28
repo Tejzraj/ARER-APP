@@ -15,6 +15,7 @@ import com.arer.app.R
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onNavigateToRateManagement: () -> Unit,
     onLoggedOut: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -55,12 +56,13 @@ fun SettingsScreen(
                 }
             }
 
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Rate Management", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "Rate Management — Coming in next phase")
-                }
+            Button(
+                onClick = onNavigateToRateManagement,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text(stringResource(id = R.string.rate_management))
             }
 
             Spacer(modifier = Modifier.height(16.dp))

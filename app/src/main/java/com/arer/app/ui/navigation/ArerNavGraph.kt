@@ -8,6 +8,7 @@ import com.arer.app.ui.auth.LoginScreen
 import com.arer.app.ui.dashboard.DashboardScreen
 import com.arer.app.ui.entry.MonthlyEntryScreen
 import com.arer.app.ui.history.HistoryScreen
+import com.arer.app.ui.rates.RateManagementScreen
 import com.arer.app.ui.reports.ReportsScreen
 import com.arer.app.ui.settings.SettingsScreen
 import com.arer.app.ui.setup.HmSetupScreen
@@ -85,12 +86,16 @@ fun ArerNavGraph(isLoggedIn: Boolean = false) {
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
+                onNavigateToRateManagement = { navController.navigate(Screen.RateManagement.route) },
                 onLoggedOut = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Dashboard.route) { inclusive = true }
                     }
                 }
             )
+        }
+        composable(Screen.RateManagement.route) {
+            RateManagementScreen(onBack = { navController.popBackStack() })
         }
     }
 }

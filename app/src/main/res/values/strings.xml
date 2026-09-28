@@ -47,4 +47,16 @@
     <string name="override_dialog_title">Override Day Status</string>
     <string name="override_dialog_message">This date is normally a non-working day. Do you want to mark this date as an exceptional working day?</string>
     <string name="rates_not_configured">Rates not configured</string>
+    <string name="rate_management">Rate Management</string>
+    <string name="confirm_rates">Confirm Rates</string>
+    <string name="current_rate">Current Rate</string>
+    <string name="new_rate">New Rate</string>
+    <string name="effective_from">Effective From</string>
+    <string name="rate_history">Rate History</string>
+    <string name="not_configured">Not Configured</string>
+    <string name="edit_rate">Edit Rate</string>
+    <string name="save_rate">Save Rate</string>
+    <string name="review_mdm_rates">Review MDM Rates</string>
+    <string name="rate_confirmation_msg">Please verify the rates before continuing.</string>
+    <string name="negative_rate_error">Rate cannot be negative.</string>
 </resources>

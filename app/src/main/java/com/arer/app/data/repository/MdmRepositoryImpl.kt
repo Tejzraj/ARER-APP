@@ -3,8 +3,10 @@ package com.arer.app.data.repository
 import com.arer.app.data.local.dao.HolidayDao
 import com.arer.app.data.local.dao.MdmDao
 import com.arer.app.data.local.dao.ReportDao
+import com.arer.app.data.local.entity.AuditLogEntity
 import com.arer.app.data.local.entity.DailyMDMEntryEntity
 import com.arer.app.data.local.entity.HolidayEntity
+import com.arer.app.data.local.entity.ItemRateEntity
 import com.arer.app.data.local.entity.MDMItemEntity
 import com.arer.app.data.local.entity.MonthlyRateConfirmationEntity
 import com.arer.app.data.local.entity.MonthlyReportEntity
@@ -44,6 +46,14 @@ class MdmRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getRatesForItem(itemId: Long): Flow<List<ItemRateEntity>> = mdmDao.getRatesForItem(itemId)
+
+    override suspend fun getRateForDate(itemId: Long, timestamp: Long): ItemRateEntity? = mdmDao.getRateForDate(itemId, timestamp)
+
+    override suspend fun saveItemRate(rate: ItemRateEntity) {
+        mdmDao.insertRate(rate)
+    }
+
     override fun getEntriesForMonth(yearMonth: String): Flow<List<DailyMDMEntryEntity>> = mdmDao.getEntriesForMonth(yearMonth)
 
     override suspend fun saveDailyEntry(entry: DailyMDMEntryEntity) {
@@ -60,8 +70,15 @@ class MdmRepositoryImpl @Inject constructor(
     override fun getRateConfirmation(yearMonth: String): Flow<MonthlyRateConfirmationEntity?> =
         mdmDao.getRateConfirmation(yearMonth)
 
+    override suspend fun getRateConfirmationSync(yearMonth: String): MonthlyRateConfirmationEntity? =
+        mdmDao.getRateConfirmationSync(yearMonth)
+
     override suspend fun saveRateConfirmation(confirmation: MonthlyRateConfirmationEntity) {
         mdmDao.insertRateConfirmation(confirmation)
+    }
+
+    override suspend fun logAudit(action: String, details: String) {
+        mdmDao.insertAuditLog(AuditLogEntity(action = action, details = details))
     }
 
     override fun getAllReports(): Flow<List<MonthlyReportEntity>> = reportDao.getAllReports()

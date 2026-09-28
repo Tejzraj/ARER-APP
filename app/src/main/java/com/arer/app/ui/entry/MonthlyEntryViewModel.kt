@@ -2,11 +2,15 @@ package com.arer.app.ui.entry
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arer.app.data.local.entity.MonthlyRateConfirmationEntity
 import com.arer.app.domain.model.DailyEntryStatus
+import com.arer.app.domain.repository.MdmRepository
 import com.arer.app.domain.usecase.CalculateMonthlySummaryUseCase
 import com.arer.app.domain.usecase.DayUiModel
 import com.arer.app.domain.usecase.GetMonthlyEntriesUseCase
+import com.arer.app.domain.usecase.ItemRateInfo
 import com.arer.app.domain.usecase.MonthlySummary
+import com.arer.app.domain.usecase.ResolveMonthlyRatesUseCase
 import com.arer.app.domain.usecase.SaveDailyMdmEntryUseCase
 import com.arer.app.util.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -24,9 +27,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MonthlyEntryViewModel @Inject constructor(
+    private val mdmRepository: MdmRepository,
     private val getMonthlyEntriesUseCase: GetMonthlyEntriesUseCase,
     private val saveDailyMdmEntryUseCase: SaveDailyMdmEntryUseCase,
-    private val calculateMonthlySummaryUseCase: CalculateMonthlySummaryUseCase
+    private val calculateMonthlySummaryUseCase: CalculateMonthlySummaryUseCase,
+    private val resolveMonthlyRatesUseCase: ResolveMonthlyRatesUseCase
 ) : ViewModel() {
 
     private val cal = Calendar.getInstance()
@@ -50,6 +55,31 @@ class MonthlyEntryViewModel @Inject constructor(
     val summary: StateFlow<MonthlySummary> = days.map { list ->
         calculateMonthlySummaryUseCase(list)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MonthlySummary(0, 0, 0, 0, 0))
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val isRateConfirmed: StateFlow<Boolean> = yearMonthString.flatMapLatest { ym ->
+        mdmRepository.getRateConfirmation(ym)
+    }.map { conf -> conf?.isConfirmed == true }
+     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val monthlyRates: StateFlow<List<ItemRateInfo>> = yearMonthString.flatMapLatest { ym ->
+        kotlinx.coroutines.flow.flow {
+            emit(resolveMonthlyRatesUseCase(ym))
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun confirmRates() {
+        val ym = yearMonthString.value
+        viewModelScope.launch {
+            val entity = MonthlyRateConfirmationEntity(
+                yearMonth = ym,
+                isConfirmed = true
+            )
+            mdmRepository.saveRateConfirmation(entity)
+            mdmRepository.logAudit("MONTHLY_RATE_CONFIRMED", "Confirmed MDM rates for $ym")
+        }
+    }
 
     fun previousMonth() {
         var m = _currentMonth.value - 1

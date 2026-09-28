@@ -47,4 +47,16 @@
     <string name="override_dialog_title">ದಿನದ ಸ್ಥಿತಿ ಬದಲಾಯಿಸಿ</string>
     <string name="override_dialog_message">ಈ ದಿನವು ಸಾಮಾನ್ಯವಾಗಿ ರಜೆಯಾಗಿರುತ್ತದೆ. ನೀವು ಇದನ್ನು ವಿಶೇಷ ಕೆಲಸದ ದಿನವೆಂದು ಗುರುತಿಸಲು ಬಯಸುವಿರಾ?</string>
     <string name="rates_not_configured">ದರಗಳನ್ನು ನಿಗದಿಪಡಿಸಲಾಗಿಲ್ಲ</string>
+    <string name="rate_management">ದರ ನಿರ್ವಹಣೆ</string>
+    <string name="confirm_rates">ದರಗಳನ್ನು ದೃಢೀಕರಿಸಿ</string>
+    <string name="current_rate">ಪ್ರಸ್ತುತ ದರ</string>
+    <string name="new_rate">ಹೊಸ ದರ</string>
+    <string name="effective_from">ಜಾರಿಗೆ ಬರುವ ದಿನಾಂಕ</string>
+    <string name="rate_history">ದರ ಇತಿಹಾಸ</string>
+    <string name="not_configured">ಕಾನ್ಫಿಗರ್ ಮಾಡಿಲ್ಲ</string>
+    <string name="edit_rate">ದರ ಸಂಪಾದಿಸಿ</string>
+    <string name="save_rate">ದರ ಉಳಿಸಿ</string>
+    <string name="review_mdm_rates">ಬಿಸಿಯೂಟ ದರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ</string>
+    <string name="rate_confirmation_msg">ಮುಂದುವರಿಯುವ ಮೊದಲು ದರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.</string>
+    <string name="negative_rate_error">ದರವು ನಕಾರಾತ್ಮಕವಾಗಿರಬಾರದು.</string>
 </resources>

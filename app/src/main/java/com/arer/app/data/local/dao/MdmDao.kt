@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.arer.app.data.local.entity.AuditLogEntity
 import com.arer.app.data.local.entity.DailyMDMEntryEntity
 import com.arer.app.data.local.entity.ItemRateEntity
 import com.arer.app.data.local.entity.MDMItemEntity
@@ -27,6 +28,9 @@ interface MdmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRate(rate: ItemRateEntity)
 
+    @Query("SELECT * FROM item_rates WHERE itemId = :itemId ORDER BY effectiveDate DESC")
+    fun getRatesForItem(itemId: Long): Flow<List<ItemRateEntity>>
+
     @Query("SELECT * FROM item_rates WHERE itemId = :itemId AND effectiveDate <= :timestamp ORDER BY effectiveDate DESC LIMIT 1")
     suspend fun getRateForDate(itemId: Long, timestamp: Long): ItemRateEntity?
 
@@ -39,6 +43,12 @@ interface MdmDao {
     @Query("SELECT * FROM monthly_rate_confirmations WHERE yearMonth = :yearMonth LIMIT 1")
     fun getRateConfirmation(yearMonth: String): Flow<MonthlyRateConfirmationEntity?>
 
+    @Query("SELECT * FROM monthly_rate_confirmations WHERE yearMonth = :yearMonth LIMIT 1")
+    suspend fun getRateConfirmationSync(yearMonth: String): MonthlyRateConfirmationEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRateConfirmation(confirmation: MonthlyRateConfirmationEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAuditLog(audit: AuditLogEntity)
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Lock
@@ -23,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.arer.app.R
 import com.arer.app.domain.model.DailyEntryStatus
 import com.arer.app.domain.usecase.DayUiModel
+import com.arer.app.ui.rates.MonthlyRateConfirmationDialog
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,12 +32,23 @@ fun MonthlyEntryScreen(
     viewModel: MonthlyEntryViewModel = hiltViewModel()
 ) {
     val displayTitle by viewModel.displayMonthTitle.collectAsState()
+    val yearMonth by viewModel.yearMonthString.collectAsState()
     val days by viewModel.days.collectAsState()
     val summary by viewModel.summary.collectAsState()
+    val isRateConfirmed by viewModel.isRateConfirmed.collectAsState()
+    val monthlyRates by viewModel.monthlyRates.collectAsState()
 
     var showOverrideDialog by remember { mutableStateOf(false) }
     var selectedDayForOverride by remember { mutableStateOf<DayUiModel?>(null) }
     var overrideReasonInput by remember { mutableStateOf("") }
+
+    if (!isRateConfirmed) {
+        MonthlyRateConfirmationDialog(
+            yearMonth = yearMonth,
+            rates = monthlyRates,
+            onConfirm = { viewModel.confirmRates() }
+        )
+    }
 
     Scaffold(
         topBar = {
