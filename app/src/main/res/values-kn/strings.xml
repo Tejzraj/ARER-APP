@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">ಅರೇರ್ ಆಪ್</string>
+    <string name="app_subtitle">ಶಾಲೆ ಬಿಸಿಯೂಟ ಮತ್ತು ವರದಿ ಸಹಾಯಕ</string>
+    <string name="login_title">ಲಾಗಿನ್</string>
+    <string name="mobile_number">ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</string>
+    <string name="continue_btn">ಮುಂದುವರಿಸಿ</string>
+    <string name="dev_login">ಡೆವಲಪ್ಮೆಂಟ್ ಲಾಗಿನ್</string>
+    <string name="school_setup_title">ಶಾಲೆಯ ವಿವರಗಳು</string>
+    <string name="school_name">ಶಾಲೆಯ ಹೆಸರು</string>
+    <string name="school_code">ಶಾಲಾ ಕೋಡ್</string>
+    <string name="udise_code">ಯುಡೈస్ ಕೋಡ್</string>
+    <string name="kgid_number">ಕೆ.ಜಿ.ಐ.ಡಿ ನಂಬರ್</string>
+    <string name="district">ಜಿಲ್ಲೆ</string>
+    <string name="taluk">ತಾಲ್ಲೂಕು</string>
+    <string name="cluster">ಕ್ಲಸ್ಟರ್</string>
+    <string name="village_town">ಗ್ರಾಮ / ಪಟ್ಟಣ</string>
+    <string name="address">ವಿಳಾಸ</string>
+    <string name="pin_code">ಪಿನ್ ಕೋಡ್</string>
+    <string name="save_continue">ಉಳಿಸಿ &amp; ಮುಂದುವರಿಸಿ</string>
+    <string name="hm_setup_title">ಮುಖ್ಯೋಪಧ್ಯಾಯರ ವಿವರಗಳು</string>
+    <string name="hm_name">ಮುಖ್ಯೋಪಧ್ಯಾಯರ ಹೆಸರು</string>
+    <string name="designation" translatable="false">ಹುದ್ದೆ</string>
+    <string name="hm_kgid">ಮುಖ್ಯೋಪಧ್ಯಾಯರ ಕೆ.ಜಿ.ಐ.ಡಿ</string>
+    <string name="mdm_setup_title">ಬಿಸಿಯೂಟ ಸಾಮಗ್ರಿಗಳು</string>
+    <string name="dashboard_title">ಮುಖಪುಟ</string>
+    <string name="this_month">ಈ ತಿಂಗಳು</string>
+    <string name="mdm_days">ಬಿಸಿಯೂಟ ದಿನಗಳು</string>
+    <string name="students_served">ಊಟ ಪಡೆದ ವಿದ್ಯಾರ್ಥಿಗಳು</string>
+    <string name="estimated_amount">ಅಂದಾಜು ಮೊತ್ತ</string>
+    <string name="report_status">ವರದಿ ಸ್ಥಿತಿ</string>
+    <string name="not_started">ಪ್ರಾರಂಭವಾಗಿಲ್ಲ</string>
+    <string name="enter_daily_count">ದೈನಂದಿನ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ</string>
+    <string name="view_reports">ವರದಿಗಳನ್ನು ವೀಕ್ಷಿಸಿ</string>
+    <string name="history">ಇತಿಹಾಸ</string>
+    <string name="settings">ಸೆಟ್ಟಿಂಗ್ಸ್</string>
+    <string name="logout">ಲಾಗ್ ಔಟ್</string>
+</resources>
