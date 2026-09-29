@@ -46,9 +46,37 @@ abstract class ArerDatabase : RoomDatabase() {
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                // Non-destructive migration: SQLite allows INTEGER columns to store NULL values.
-                // Existing daily entries are fully preserved.
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // 1. Create new table with nullable studentCount
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `daily_mdm_entries_new` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `date` INTEGER NOT NULL,
+                        `yearMonth` TEXT NOT NULL,
+                        `studentCount` INTEGER,
+                        `status` TEXT NOT NULL,
+                        `isOverridden` INTEGER NOT NULL,
+                        `overrideReason` TEXT,
+                        `updatedAt` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                // 2. Copy data from old table to new table
+                db.execSQL("""
+                    INSERT INTO `daily_mdm_entries_new` (`id`, `date`, `yearMonth`, `studentCount`, `status`, `isOverridden`, `overrideReason`, `updatedAt`)
+                    SELECT `id`, `date`, `yearMonth`, `studentCount`, `status`, `isOverridden`, `overrideReason`, `updatedAt`
+                    FROM `daily_mdm_entries`
+                """.trimIndent())
+
+                // 3. Drop old table
+                db.execSQL("DROP TABLE `daily_mdm_entries`")
+
+                // 4. Rename new table to daily_mdm_entries
+                db.execSQL("ALTER TABLE `daily_mdm_entries_new` RENAME TO `daily_mdm_entries`")
+
+                // 5. Recreate unique and standard indices
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_daily_mdm_entries_date` ON `daily_mdm_entries` (`date`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_daily_mdm_entries_yearMonth` ON `daily_mdm_entries` (`yearMonth`)")
             }
         }
     }
