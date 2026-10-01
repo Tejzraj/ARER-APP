@@ -66,6 +66,8 @@ fun MonthlyEntryScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
+                .navigationBarsPadding()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -131,12 +133,13 @@ fun MonthlyEntryScreen(
                 }
             }
 
-            // Daily List
+            // Daily List with keyboard-aware padding
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(bottom = 120.dp)
             ) {
                 items(days) { day ->
                     DayRowItem(

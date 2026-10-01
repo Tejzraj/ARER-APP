@@ -30,19 +30,36 @@ class MdmRepositoryImpl @Inject constructor(
         val existing = mdmDao.getAllItemsSync()
         if (existing.isEmpty()) {
             val defaultItems = listOf(
-                MDMItemEntity(englishName = "Vegetables", kannadaName = "ತರಕಾರಿಗಳು", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Sambar Items", kannadaName = "ಸಾಂಬಾರ್ ಪದಾರ್ಥಗಳು", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Salt", kannadaName = "ಉಪ್ಪು", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Sugar", kannadaName = "ಸಕ್ಕರೆ", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Dal", kannadaName = "ಬೇಳೆ", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Oil", kannadaName = "ಎಣ್ಣೆ", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Gas", kannadaName = "ಗ್ಯಾಸ್", calculationType = CalculationType.FIXED_MONTHLY),
-                MDMItemEntity(englishName = "Egg", kannadaName = "ಮೊಟ್ಟೆ", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Milk", kannadaName = "ಹಾಲು", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(englishName = "Girini", kannadaName = "ಗಿರಿಣಿ", calculationType = CalculationType.CUSTOM_COUNT),
-                MDMItemEntity(englishName = "Banana", kannadaName = "ಬಾಳೆಹಣ್ಣು", calculationType = CalculationType.PER_STUDENT)
+                MDMItemEntity(id = 1L, englishName = "Vegetables", kannadaName = "ತರಕಾರಿಗಳು", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 2L, englishName = "Sambar Items", kannadaName = "ಸಾಂಬಾರ್ ಪದಾರ್ಥಗಳು", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 3L, englishName = "Salt", kannadaName = "ಉಪ್ಪು", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 4L, englishName = "Sugar", kannadaName = "ಸಕ್ಕರೆ", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 5L, englishName = "Dal", kannadaName = "ಬೇಳೆ", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 6L, englishName = "Oil", kannadaName = "ಎಣ್ಣೆ", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 7L, englishName = "Gas", kannadaName = "ಗ್ಯಾಸ್", calculationType = CalculationType.FIXED_MONTHLY),
+                MDMItemEntity(id = 8L, englishName = "Egg", kannadaName = "ಮೊಟ್ಟೆ", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 9L, englishName = "Milk", kannadaName = "ಹಾಲು", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 10L, englishName = "Girini", kannadaName = "ಗಿರಿಣಿ", calculationType = CalculationType.FIXED_MONTHLY),
+                MDMItemEntity(id = 11L, englishName = "Banana", kannadaName = "ಬಾಳೆಹಣ್ಣು", calculationType = CalculationType.PER_STUDENT)
             )
             mdmDao.insertItems(defaultItems)
+
+            val defaultRates = listOf(
+                ItemRateEntity(itemId = 1L, ratePaise = 180L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 2L, ratePaise = 55L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 3L, ratePaise = 4L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 4L, ratePaise = 32L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 5L, ratePaise = 252L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 6L, ratePaise = 77L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 7L, ratePaise = 110000L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 8L, ratePaise = 600L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 9L, ratePaise = 0L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 10L, ratePaise = 50000L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 11L, ratePaise = 100L, effectiveDate = 0L)
+            )
+            for (rate in defaultRates) {
+                mdmDao.insertRate(rate)
+            }
         }
     }
 

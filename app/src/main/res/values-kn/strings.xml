@@ -58,5 +58,13 @@
     <string name="save_rate">ದರ ಉಳಿಸಿ</string>
     <string name="review_mdm_rates">ಬಿಸಿಯೂಟ ದರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ</string>
     <string name="rate_confirmation_msg">ಮುಂದುವರಿಯುವ ಮೊದಲು ದರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.</string>
-    <string name="negative_rate_error">ದರವು ನಕಾರಾತ್ಮಕವಾಗಿರಬಾರದು.</string>
+    <string name="negative_rate_error">Rate cannot be negative.</string>
+    <string name="calculation_success">ಲೆಕ್ಕಾಚಾರ ಸಿದ್ಧವಾಗಿದೆ</string>
+    <string name="incomplete_entries">ಅಪೂರ್ಣ ನಮೂದುಗಳು</string>
+    <string name="missing_item_rates">ಕಾನ್ಫಿಗರ್ ಮಾಡದ ದರಗಳು</string>
+    <string name="export_excel">ಎಕ್ಸೆಲ್ ರಫ್ತು</string>
+    <string name="excel_report">ಎಕ್ಸೆಲ್ ವರದಿ</string>
+    <string name="monthly_cost">ಮಾಸಿಕ ವೆಚ್ಚ</string>
+    <string name="ready_to_generate">ವರದಿ ಸಿದ್ಧವಾಗಿದೆ</string>
+    <string name="grand_total_label">ಒಟ್ಟು ಮೊತ್ತ</string>
 </resources>

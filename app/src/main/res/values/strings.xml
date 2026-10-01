@@ -59,4 +59,12 @@
     <string name="review_mdm_rates">Review MDM Rates</string>
     <string name="rate_confirmation_msg">Please verify the rates before continuing.</string>
     <string name="negative_rate_error">Rate cannot be negative.</string>
+    <string name="calculation_success">Calculation Ready</string>
+    <string name="incomplete_entries">Incomplete daily entries</string>
+    <string name="missing_item_rates">Missing item rates</string>
+    <string name="export_excel">Export Excel</string>
+    <string name="excel_report">Excel Report</string>
+    <string name="monthly_cost">Monthly Cost</string>
+    <string name="ready_to_generate">Ready to generate report</string>
+    <string name="grand_total_label">Grand Total</string>
 </resources>

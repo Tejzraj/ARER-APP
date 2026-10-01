@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -31,18 +32,24 @@ private val LightColorScheme = lightColorScheme(
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = ArerPrimary,
-    onPrimary = ArerOnPrimary,
-    primaryContainer = ArerPrimaryContainer,
-    onPrimaryContainer = ArerOnPrimaryContainer,
-    secondary = ArerSecondary,
-    onSecondary = ArerOnSecondary
+    primary = Color(0xFFFB923C),
+    onPrimary = Color(0xFF431407),
+    primaryContainer = Color(0xFFC2410C),
+    onPrimaryContainer = Color(0xFFFFEDD5),
+    secondary = Color(0xFFF97316),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFF9A3412),
+    onSecondaryContainer = Color(0xFFFFDBCC),
+    background = ArerDarkBackground,
+    onBackground = ArerDarkOnSurface,
+    surface = ArerDarkSurface,
+    onSurface = ArerDarkOnSurface
 )
 
 @Composable
 fun ARERAPPTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, // Disabled to preserve ARER Orange brand identity
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -59,7 +66,7 @@ fun ARERAPPTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
