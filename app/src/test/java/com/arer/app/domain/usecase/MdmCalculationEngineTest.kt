@@ -159,4 +159,21 @@ class MdmCalculationEngineTest {
         assertEquals(50000L, result50.itemResults[0].amountPaise)
         assertEquals(50000L, result100.itemResults[0].amountPaise)
     }
+
+    @Test
+    fun testCrossMonthDataIsolation() {
+        val sepDays = listOf(DayUiModel(1L, 1, "MON", DailyEntryStatus.NORMAL, 100, false, null, null))
+        val sepRates = listOf(ItemRateInfo(MDMItemEntity(1L, "Vegetables", "ತರಕಾರಿ", CalculationType.PER_STUDENT), 500L, "₹5.00"))
+
+        val octDays = listOf(DayUiModel(1L, 1, "MON", DailyEntryStatus.NORMAL, 200, false, null, null))
+        val octRates = listOf(ItemRateInfo(MDMItemEntity(1L, "Vegetables", "ತರಕಾರಿ", CalculationType.PER_STUDENT), 450L, "₹4.50"))
+
+        val resSep = engine.calculate("2026-09", sepDays, sepRates, true)
+        val resOct = engine.calculate("2026-10", octDays, octRates, true)
+        val resSepAgain = engine.calculate("2026-09", sepDays, sepRates, true)
+
+        assertEquals(50000L, resSep.grandTotalPaise) // 100 * 500
+        assertEquals(90000L, resOct.grandTotalPaise) // 200 * 450
+        assertEquals(50000L, resSepAgain.grandTotalPaise) // returns to sep without leakage
+    }
 }

@@ -5,8 +5,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.arer.app.R
@@ -21,7 +23,7 @@ fun MdmSetupScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(id = R.string.mdm_setup_title)) })
+            TopAppBar(title = { Text("Verify MDM Rates") })
         }
     ) { padding ->
         Column(
@@ -31,10 +33,17 @@ fun MdmSetupScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = "The following standard MDM items have been initialized for monthly calculations:",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Please review the rates before creating your first report. You can change them later from Rate Management.",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
 
             LazyColumn(
                 modifier = Modifier
@@ -48,10 +57,14 @@ fun MdmSetupScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = item.englishName, style = MaterialTheme.typography.titleMedium)
-                            Text(text = item.kannadaName, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(text = item.englishName, fontWeight = FontWeight.Bold)
+                                Text(text = item.kannadaName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                            }
+                            Text(text = item.calculationType.name, style = MaterialTheme.typography.labelMedium)
                         }
                     }
                 }
@@ -63,7 +76,7 @@ fun MdmSetupScreen(
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Confirm & Go to Dashboard")
+                Text("Confirm Rates & Go to Dashboard")
             }
         }
     }

@@ -19,7 +19,8 @@ data class DayUiModel(
     val studentCount: Int?, // null = missing, 0+ = served count
     val isOverridden: Boolean,
     val overrideReason: String?,
-    val holidayReason: String?
+    val holidayReason: String?,
+    val isHolidayOn: Boolean = false
 )
 
 class GetMonthlyEntriesUseCase @Inject constructor(
@@ -52,6 +53,16 @@ class GetMonthlyEntriesUseCase @Inject constructor(
                     else -> DailyEntryStatus.NORMAL
                 }
 
+                val isHolidayOn = when {
+                    existingEntry != null && existingEntry.isOverridden -> {
+                        existingEntry.status == DailyEntryStatus.HOLIDAY || existingEntry.status == DailyEntryStatus.GOVERNMENT_HOLIDAY
+                    }
+                    existingEntry != null -> {
+                        existingEntry.status == DailyEntryStatus.HOLIDAY || existingEntry.status == DailyEntryStatus.GOVERNMENT_HOLIDAY
+                    }
+                    else -> dateItem.isSunday || holiday != null
+                }
+
                 DayUiModel(
                     dateMillis = dateItem.dateMillis,
                     dayOfMonth = dateItem.dayOfMonth,
@@ -60,7 +71,8 @@ class GetMonthlyEntriesUseCase @Inject constructor(
                     studentCount = existingEntry?.studentCount,
                     isOverridden = existingEntry?.isOverridden ?: false,
                     overrideReason = existingEntry?.overrideReason,
-                    holidayReason = holiday?.reason ?: if (dateItem.isSunday) "Sunday" else null
+                    holidayReason = holiday?.reason ?: if (dateItem.isSunday) "Sunday" else null,
+                    isHolidayOn = isHolidayOn
                 )
             }
         }

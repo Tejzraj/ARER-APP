@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,11 +40,11 @@ class ReportsViewModel @Inject constructor(
     private val _currentYear = MutableStateFlow(cal.get(Calendar.YEAR))
     private val _currentMonth = MutableStateFlow(cal.get(Calendar.MONTH) + 1)
 
-    val yearMonthString: StateFlow<String> = kotlinx.coroutines.flow.combine(_currentYear, _currentMonth) { y, m ->
+    val yearMonthString: StateFlow<String> = combine(_currentYear, _currentMonth) { y, m ->
         DateUtils.getYearMonthString(y, m)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DateUtils.getYearMonthString(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1))
 
-    val displayMonthTitle: StateFlow<String> = kotlinx.coroutines.flow.combine(_currentYear, _currentMonth) { y, m ->
+    val displayMonthTitle: StateFlow<String> = combine(_currentYear, _currentMonth) { y, m ->
         val months = listOf("", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
         "${months.getOrElse(m) { "" }} $y"
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
@@ -58,14 +59,11 @@ class ReportsViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     init {
-        loadCalculation()
-    }
-
-    private fun loadCalculation() {
         viewModelScope.launch {
-            val ym = yearMonthString.value
-            val res = calculateMonthlyMdmUseCase(ym)
-            _calculationResult.value = res
+            yearMonthString.collect { ym ->
+                val res = calculateMonthlyMdmUseCase(ym)
+                _calculationResult.value = res
+            }
         }
     }
 
@@ -78,7 +76,6 @@ class ReportsViewModel @Inject constructor(
         }
         _currentYear.value = y
         _currentMonth.value = m
-        loadCalculation()
     }
 
     fun nextMonth() {
@@ -90,7 +87,6 @@ class ReportsViewModel @Inject constructor(
         }
         _currentYear.value = y
         _currentMonth.value = m
-        loadCalculation()
     }
 
     suspend fun exportPdf(context: Context): File? {

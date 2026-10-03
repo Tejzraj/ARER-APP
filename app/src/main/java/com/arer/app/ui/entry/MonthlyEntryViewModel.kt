@@ -120,6 +120,23 @@ class MonthlyEntryViewModel @Inject constructor(
         }
     }
 
+    fun toggleHoliday(dateMillis: Long, turnOn: Boolean) {
+        val ym = yearMonthString.value
+        val dayModel = days.value.find { it.dateMillis == dateMillis } ?: return
+        val newStatus = if (turnOn) DailyEntryStatus.HOLIDAY else DailyEntryStatus.NORMAL
+
+        viewModelScope.launch {
+            saveDailyMdmEntryUseCase(
+                dateMillis = dateMillis,
+                yearMonth = ym,
+                studentCount = dayModel.studentCount, // Preserved!
+                status = newStatus,
+                isOverridden = true,
+                overrideReason = if (turnOn) "Holiday ON" else "Holiday OFF"
+            )
+        }
+    }
+
     fun overrideDay(dateMillis: Long, reason: String) {
         val ym = yearMonthString.value
         val dayModel = days.value.find { it.dateMillis == dateMillis } ?: return

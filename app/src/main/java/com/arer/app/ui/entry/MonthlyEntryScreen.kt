@@ -3,18 +3,22 @@ package com.arer.app.ui.entry
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -147,10 +151,8 @@ fun MonthlyEntryScreen(
                         onCountChange = { countStr ->
                             viewModel.updateStudentCount(day.dateMillis, countStr)
                         },
-                        onOverrideClick = {
-                            selectedDayForOverride = day
-                            overrideReasonInput = ""
-                            showOverrideDialog = true
+                        onToggleHoliday = { turnOn ->
+                            viewModel.toggleHoliday(day.dateMillis, turnOn)
                         }
                     )
                 }
@@ -198,13 +200,10 @@ fun MonthlyEntryScreen(
 fun DayRowItem(
     day: DayUiModel,
     onCountChange: (String) -> Unit,
-    onOverrideClick: () -> Unit
+    onToggleHoliday: (Boolean) -> Unit
 ) {
-    val isEditable = when (day.status) {
-        DailyEntryStatus.NORMAL -> true
-        DailyEntryStatus.OVERRIDDEN -> true
-        DailyEntryStatus.HOLIDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> day.isOverridden
-    }
+    val focusManager = LocalFocusManager.current
+    val isHolidayOn = day.isHolidayOn
 
     var textValue by remember(day.dateMillis, day.studentCount) {
         mutableStateOf(day.studentCount?.toString() ?: "")
@@ -213,8 +212,8 @@ fun DayRowItem(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (day.status == DailyEntryStatus.HOLIDAY || day.status == DailyEntryStatus.GOVERNMENT_HOLIDAY) {
-                if (day.isOverridden) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceVariant
+            containerColor = if (isHolidayOn) {
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
             } else {
                 MaterialTheme.colorScheme.surface
             }
@@ -228,7 +227,7 @@ fun DayRowItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Date & Status info
+            // Date & Status info + Holiday ON/OFF Switch
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
@@ -243,21 +242,26 @@ fun DayRowItem(
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                val statusLabel = when (day.status) {
-                    DailyEntryStatus.NORMAL -> stringResource(id = R.string.working_day)
-                    DailyEntryStatus.HOLIDAY -> if (day.isOverridden) stringResource(id = R.string.exceptional_day) else stringResource(id = R.string.sunday)
-                    DailyEntryStatus.GOVERNMENT_HOLIDAY -> if (day.isOverridden) stringResource(id = R.string.exceptional_day) else stringResource(id = R.string.government_holiday)
-                    DailyEntryStatus.OVERRIDDEN -> stringResource(id = R.string.exceptional_day)
-                }
-                Text(text = statusLabel, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
-
-                if (!day.holidayReason.isNullOrBlank()) {
-                    Text(text = day.holidayReason, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = if (isHolidayOn) "Holiday ON" else "Holiday OFF",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isHolidayOn) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                    )
+                    Switch(
+                        checked = isHolidayOn,
+                        onCheckedChange = { checked ->
+                            onToggleHoliday(checked)
+                        },
+                        modifier = Modifier.scale(0.8f)
+                    )
                 }
             }
 
-            // Student Count Input or Lock
-            if (isEditable) {
+            // Student Count Input or Disabled State
+            if (!isHolidayOn) {
                 Column(horizontalAlignment = Alignment.End) {
                     OutlinedTextField(
                         value = textValue,
@@ -268,7 +272,15 @@ fun DayRowItem(
                             }
                         },
                         label = { Text("Count") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
+                        ),
                         modifier = Modifier.width(110.dp),
                         singleLine = true
                     )
@@ -281,13 +293,8 @@ fun DayRowItem(
                 }
             } else {
                 Column(horizontalAlignment = Alignment.End) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text("0", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        IconButton(onClick = onOverrideClick) {
-                            Icon(Icons.Default.Lock, contentDescription = "Locked / Override", tint = MaterialTheme.colorScheme.error)
-                        }
-                    }
-                    Text(text = "Tap lock to override", fontSize = 10.sp, color = MaterialTheme.colorScheme.secondary)
+                    Text("0", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                    Text(text = "Non-working", fontSize = 10.sp, color = MaterialTheme.colorScheme.secondary)
                 }
             }
         }

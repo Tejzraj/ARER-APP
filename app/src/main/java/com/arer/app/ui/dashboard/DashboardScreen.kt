@@ -24,6 +24,7 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val schoolName by viewModel.schoolName.collectAsState()
+    val monthTitle by viewModel.currentMonthTitle.collectAsState()
     val summary by viewModel.monthlySummary.collectAsState()
     val scrollState = rememberScrollState()
 
@@ -54,13 +55,13 @@ fun DashboardScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = stringResource(id = R.string.this_month),
+                        text = "REPORTING PERIOD",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Current Month",
+                        text = monthTitle,
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold
