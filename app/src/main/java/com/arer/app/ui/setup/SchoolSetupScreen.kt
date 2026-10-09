@@ -43,6 +43,8 @@ fun SchoolSetupScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(scrollState)
+                .imePadding()
+                .navigationBarsPadding()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

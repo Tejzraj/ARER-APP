@@ -20,23 +20,10 @@ class MdmCalculationEngine {
             return MonthlyMdmCalculationResult(
                 yearMonth = yearMonth,
                 totalCalendarDays = days.size,
-                totalWorkingDays = days.count { it.status == DailyEntryStatus.NORMAL || (it.status == DailyEntryStatus.OVERRIDDEN && it.isOverridden) },
-                totalMdmDays = days.count {
-                    when (it.status) {
-                        DailyEntryStatus.NORMAL -> true
-                        DailyEntryStatus.OVERRIDDEN -> true
-                        DailyEntryStatus.HOLIDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> it.isOverridden
-                    }
-                },
-                completedEntryDays = days.count { it.studentCount != null },
-                missingEntryDays = days.count {
-                    val isMdm = when (it.status) {
-                        DailyEntryStatus.NORMAL -> true
-                        DailyEntryStatus.OVERRIDDEN -> true
-                        DailyEntryStatus.HOLIDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> it.isOverridden
-                    }
-                    isMdm && it.studentCount == null
-                },
+                totalWorkingDays = days.count { !it.isHolidayOn },
+                totalMdmDays = days.count { !it.isHolidayOn },
+                completedEntryDays = days.count { !it.isHolidayOn && it.studentCount != null },
+                missingEntryDays = days.count { it.isHolidayOn.not() && it.studentCount == null },
                 totalStudentsServed = 0,
                 itemResults = emptyList(),
                 grandTotalPaise = 0L,
@@ -52,17 +39,8 @@ class MdmCalculationEngine {
         var totalStudentsServed = 0
 
         for (day in days) {
-            val isMdmDay = when (day.status) {
-                DailyEntryStatus.NORMAL -> true
-                DailyEntryStatus.OVERRIDDEN -> true
-                DailyEntryStatus.HOLIDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> day.isOverridden
-            }
-
-            val isWorking = when (day.status) {
-                DailyEntryStatus.NORMAL -> true
-                DailyEntryStatus.OVERRIDDEN -> day.isOverridden
-                DailyEntryStatus.HOLIDAY, DailyEntryStatus.GOVERNMENT_HOLIDAY -> day.isOverridden
-            }
+            val isMdmDay = !day.isHolidayOn
+            val isWorking = !day.isHolidayOn
 
             if (isWorking) totalWorkingDays++
 
