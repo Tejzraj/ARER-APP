@@ -30,7 +30,7 @@ object DatabaseModule {
             context,
             ArerDatabase::class.java,
             "arer_app_database"
-        ).addMigrations(ArerDatabase.MIGRATION_1_2).build()
+        ).addMigrations(ArerDatabase.MIGRATION_1_2, ArerDatabase.MIGRATION_2_3).build()
     }
 
     @Provides

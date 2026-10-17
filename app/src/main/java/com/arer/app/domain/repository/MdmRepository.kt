@@ -6,6 +6,7 @@ import com.arer.app.data.local.entity.ItemRateEntity
 import com.arer.app.data.local.entity.MDMItemEntity
 import com.arer.app.data.local.entity.MonthlyRateConfirmationEntity
 import com.arer.app.data.local.entity.MonthlyReportEntity
+import com.arer.app.data.local.entity.MonthlyReportItemEntity
 import kotlinx.coroutines.flow.Flow
 
 interface MdmRepository {
@@ -13,6 +14,7 @@ interface MdmRepository {
     suspend fun initializeDefaultMdmItemsIfNeeded()
     fun getRatesForItem(itemId: Long): Flow<List<ItemRateEntity>>
     suspend fun getRateForDate(itemId: Long, timestamp: Long): ItemRateEntity?
+    suspend fun getLatestRateForItem(itemId: Long): ItemRateEntity?
     suspend fun saveItemRate(rate: ItemRateEntity)
     fun getEntriesForMonth(yearMonth: String): Flow<List<DailyMDMEntryEntity>>
     suspend fun saveDailyEntry(entry: DailyMDMEntryEntity)
@@ -23,5 +25,5 @@ interface MdmRepository {
     suspend fun saveRateConfirmation(confirmation: MonthlyRateConfirmationEntity)
     suspend fun logAudit(action: String, details: String)
     fun getAllReports(): Flow<List<MonthlyReportEntity>>
-    suspend fun saveReport(report: MonthlyReportEntity, items: List<com.arer.app.data.local.entity.MonthlyReportItemEntity>)
+    suspend fun saveReport(report: MonthlyReportEntity, items: List<MonthlyReportItemEntity>)
 }

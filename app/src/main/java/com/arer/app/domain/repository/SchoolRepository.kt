@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface SchoolRepository {
     fun getSchoolProfile(): Flow<SchoolProfileEntity?>
+    suspend fun getSchoolProfileSync(): SchoolProfileEntity?
     suspend fun saveSchoolProfile(school: SchoolProfileEntity)
     fun getHMProfile(): Flow<HMProfileEntity?>
+    suspend fun getHMProfileSync(): HMProfileEntity?
     suspend fun saveHMProfile(hm: HMProfileEntity)
 }

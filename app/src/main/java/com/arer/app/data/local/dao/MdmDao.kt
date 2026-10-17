@@ -34,6 +34,9 @@ interface MdmDao {
     @Query("SELECT * FROM item_rates WHERE itemId = :itemId AND effectiveDate <= :timestamp ORDER BY effectiveDate DESC LIMIT 1")
     suspend fun getRateForDate(itemId: Long, timestamp: Long): ItemRateEntity?
 
+    @Query("SELECT * FROM item_rates WHERE itemId = :itemId ORDER BY effectiveDate DESC, id DESC LIMIT 1")
+    suspend fun getLatestRateForItem(itemId: Long): ItemRateEntity?
+
     @Query("SELECT * FROM daily_mdm_entries WHERE yearMonth = :yearMonth")
     fun getEntriesForMonth(yearMonth: String): Flow<List<DailyMDMEntryEntity>>
 

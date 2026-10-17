@@ -15,11 +15,15 @@ class SchoolRepositoryImpl @Inject constructor(
 
     override fun getSchoolProfile(): Flow<SchoolProfileEntity?> = schoolDao.getSchoolProfile()
 
+    override suspend fun getSchoolProfileSync(): SchoolProfileEntity? = schoolDao.getSchoolProfileSync()
+
     override suspend fun saveSchoolProfile(school: SchoolProfileEntity) {
         schoolDao.insertOrUpdateSchoolProfile(school)
     }
 
     override fun getHMProfile(): Flow<HMProfileEntity?> = schoolDao.getHMProfile()
+
+    override suspend fun getHMProfileSync(): HMProfileEntity? = schoolDao.getHMProfileSync()
 
     override suspend fun saveHMProfile(hm: HMProfileEntity) {
         schoolDao.insertOrUpdateHMProfile(hm)

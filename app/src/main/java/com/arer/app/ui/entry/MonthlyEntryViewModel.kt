@@ -2,8 +2,10 @@ package com.arer.app.ui.entry
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arer.app.data.local.entity.ItemRateEntity
 import com.arer.app.data.local.entity.MonthlyRateConfirmationEntity
 import com.arer.app.domain.model.DailyEntryStatus
+import com.arer.app.domain.model.Money
 import com.arer.app.domain.repository.MdmRepository
 import com.arer.app.domain.usecase.CalculateMonthlySummaryUseCase
 import com.arer.app.domain.usecase.DayUiModel
@@ -68,6 +70,21 @@ class MonthlyEntryViewModel @Inject constructor(
             emit(resolveMonthlyRatesUseCase(ym))
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun saveRateForMonth(itemId: Long, rateStr: String) {
+        val rupees = rateStr.toDoubleOrNull() ?: return
+        if (rupees < 0.0) return
+        val paise = Money.fromRupees(rupees).paise
+        viewModelScope.launch {
+            val entity = ItemRateEntity(
+                itemId = itemId,
+                ratePaise = paise,
+                effectiveDate = System.currentTimeMillis()
+            )
+            mdmRepository.saveItemRate(entity)
+            mdmRepository.logAudit("RATE_UPDATED_IN_CONFIRMATION", "Updated rate for item ID $itemId to $paise paise")
+        }
+    }
 
     fun confirmRates() {
         val ym = yearMonthString.value

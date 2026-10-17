@@ -50,6 +50,7 @@ fun MonthlyEntryScreen(
         MonthlyRateConfirmationDialog(
             yearMonth = yearMonth,
             rates = monthlyRates,
+            onSaveRate = { itemId, rateStr -> viewModel.saveRateForMonth(itemId, rateStr) },
             onConfirm = { viewModel.confirmRates() }
         )
     }

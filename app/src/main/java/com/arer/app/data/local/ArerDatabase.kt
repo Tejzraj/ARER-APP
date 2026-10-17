@@ -34,7 +34,7 @@ import com.arer.app.data.local.entity.SchoolProfileEntity
         MonthlyReportItemEntity::class,
         AuditLogEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -47,7 +47,6 @@ abstract class ArerDatabase : RoomDatabase() {
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // 1. Create new table with nullable studentCount
                 db.execSQL("""
                     CREATE TABLE IF NOT EXISTS `daily_mdm_entries_new` (
                         `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -61,22 +60,27 @@ abstract class ArerDatabase : RoomDatabase() {
                     )
                 """.trimIndent())
 
-                // 2. Copy data from old table to new table
                 db.execSQL("""
                     INSERT INTO `daily_mdm_entries_new` (`id`, `date`, `yearMonth`, `studentCount`, `status`, `isOverridden`, `overrideReason`, `updatedAt`)
                     SELECT `id`, `date`, `yearMonth`, `studentCount`, `status`, `isOverridden`, `overrideReason`, `updatedAt`
                     FROM `daily_mdm_entries`
                 """.trimIndent())
 
-                // 3. Drop old table
                 db.execSQL("DROP TABLE `daily_mdm_entries`")
-
-                // 4. Rename new table to daily_mdm_entries
                 db.execSQL("ALTER TABLE `daily_mdm_entries_new` RENAME TO `daily_mdm_entries`")
 
-                // 5. Recreate unique and standard indices
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_daily_mdm_entries_date` ON `daily_mdm_entries` (`date`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_daily_mdm_entries_yearMonth` ON `daily_mdm_entries` (`yearMonth`)")
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("UPDATE mdm_items SET isActive = 0 WHERE englishName = 'Egg' OR englishName = 'Banana'")
+                db.execSQL("""
+                    INSERT OR IGNORE INTO mdm_items (id, englishName, kannadaName, calculationType, isActive, createdDate, updatedDate)
+                    VALUES (8, 'Egg / Banana', 'ಮೊಟ್ಟೆ / ಬಾಳೆಹಣ್ಣು', 'PER_STUDENT', 1, 0, 0)
+                """.trimIndent())
             }
         }
     }

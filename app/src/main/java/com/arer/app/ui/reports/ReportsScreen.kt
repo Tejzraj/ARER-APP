@@ -3,7 +3,7 @@ package com.arer.app.ui.reports
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -107,6 +107,7 @@ fun ReportsScreen(
                             CalculationStatus.NO_MDM_DAYS -> "No MDM Days Found"
                         }
                         Text(text = "Status: $statusText", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = statusTextColor)
+                        Text(text = "Rate Mode: Current Settings Rates", style = MaterialTheme.typography.labelMedium, color = statusTextColor)
                         if (res.validationIssues.isNotEmpty()) {
                             for (issue in res.validationIssues) {
                                 Text(text = "• $issue", style = MaterialTheme.typography.bodySmall, color = statusTextColor)
@@ -150,7 +151,7 @@ fun ReportsScreen(
                     }
                 }
 
-                // Item Rows
+                // Item Rows with Subtle Alternating Row Background Colors
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -158,9 +159,15 @@ fun ReportsScreen(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     contentPadding = PaddingValues(vertical = 4.dp)
                 ) {
-                    items(res.itemResults) { item ->
+                    itemsIndexed(res.itemResults) { index, item ->
+                        val rowBgColor = if (index % 2 == 0) {
+                            MaterialTheme.colorScheme.surface
+                        } else {
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                        }
+
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            colors = CardDefaults.cardColors(containerColor = rowBgColor),
                             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {

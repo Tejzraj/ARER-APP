@@ -37,10 +37,9 @@ class MdmRepositoryImpl @Inject constructor(
                 MDMItemEntity(id = 5L, englishName = "Dal", kannadaName = "ಬೇಳೆ", calculationType = CalculationType.PER_STUDENT),
                 MDMItemEntity(id = 6L, englishName = "Oil", kannadaName = "ಎಣ್ಣೆ", calculationType = CalculationType.PER_STUDENT),
                 MDMItemEntity(id = 7L, englishName = "Gas", kannadaName = "ಗ್ಯಾಸ್", calculationType = CalculationType.FIXED_MONTHLY),
-                MDMItemEntity(id = 8L, englishName = "Egg", kannadaName = "ಮೊಟ್ಟೆ", calculationType = CalculationType.PER_STUDENT),
+                MDMItemEntity(id = 8L, englishName = "Egg / Banana", kannadaName = "ಮೊಟ್ಟೆ / ಬಾಳೆಹಣ್ಣು", calculationType = CalculationType.PER_STUDENT),
                 MDMItemEntity(id = 9L, englishName = "Milk", kannadaName = "ಹಾಲು", calculationType = CalculationType.PER_STUDENT),
-                MDMItemEntity(id = 10L, englishName = "Girini", kannadaName = "ಗಿರಿಣಿ", calculationType = CalculationType.FIXED_MONTHLY),
-                MDMItemEntity(id = 11L, englishName = "Banana", kannadaName = "ಬಾಳೆಹಣ್ಣು", calculationType = CalculationType.PER_STUDENT)
+                MDMItemEntity(id = 10L, englishName = "Girini", kannadaName = "ಗಿರಿಣಿ", calculationType = CalculationType.FIXED_MONTHLY)
             )
             mdmDao.insertItems(defaultItems)
 
@@ -52,13 +51,45 @@ class MdmRepositoryImpl @Inject constructor(
                 ItemRateEntity(itemId = 5L, ratePaise = 252L, effectiveDate = 0L),
                 ItemRateEntity(itemId = 6L, ratePaise = 77L, effectiveDate = 0L),
                 ItemRateEntity(itemId = 7L, ratePaise = 110000L, effectiveDate = 0L),
-                ItemRateEntity(itemId = 8L, ratePaise = 600L, effectiveDate = 0L),
+                ItemRateEntity(itemId = 8L, ratePaise = 700L, effectiveDate = 0L),
                 ItemRateEntity(itemId = 9L, ratePaise = 0L, effectiveDate = 0L),
-                ItemRateEntity(itemId = 10L, ratePaise = 50000L, effectiveDate = 0L),
-                ItemRateEntity(itemId = 11L, ratePaise = 100L, effectiveDate = 0L)
+                ItemRateEntity(itemId = 10L, ratePaise = 50000L, effectiveDate = 0L)
             )
             for (rate in defaultRates) {
                 mdmDao.insertRate(rate)
+            }
+        } else {
+            var foundCombined = false
+            for (item in existing) {
+                if (item.englishName == "Egg" || item.englishName == "Banana") {
+                    mdmDao.insertItem(item.copy(isActive = false))
+                } else if (item.englishName == "Egg / Banana" || item.id == 8L) {
+                    foundCombined = true
+                    if (!item.isActive || item.englishName != "Egg / Banana") {
+                        mdmDao.insertItem(
+                            item.copy(
+                                englishName = "Egg / Banana",
+                                kannadaName = "ಮೊಟ್ಟೆ / ಬಾಳೆಹಣ್ಣು",
+                                calculationType = CalculationType.PER_STUDENT,
+                                isActive = true
+                            )
+                        )
+                    }
+                }
+            }
+            if (!foundCombined) {
+                mdmDao.insertItem(
+                    MDMItemEntity(
+                        id = 8L,
+                        englishName = "Egg / Banana",
+                        kannadaName = "ಮೊಟ್ಟೆ / ಬಾಳೆಹಣ್ಣು",
+                        calculationType = CalculationType.PER_STUDENT,
+                        isActive = true
+                    )
+                )
+                if (mdmDao.getLatestRateForItem(8L) == null) {
+                    mdmDao.insertRate(ItemRateEntity(itemId = 8L, ratePaise = 700L, effectiveDate = 0L))
+                }
             }
         }
     }
@@ -66,6 +97,8 @@ class MdmRepositoryImpl @Inject constructor(
     override fun getRatesForItem(itemId: Long): Flow<List<ItemRateEntity>> = mdmDao.getRatesForItem(itemId)
 
     override suspend fun getRateForDate(itemId: Long, timestamp: Long): ItemRateEntity? = mdmDao.getRateForDate(itemId, timestamp)
+
+    override suspend fun getLatestRateForItem(itemId: Long): ItemRateEntity? = mdmDao.getLatestRateForItem(itemId)
 
     override suspend fun saveItemRate(rate: ItemRateEntity) {
         mdmDao.insertRate(rate)

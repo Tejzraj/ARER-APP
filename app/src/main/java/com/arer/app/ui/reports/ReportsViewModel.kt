@@ -3,7 +3,6 @@ package com.arer.app.ui.reports
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arer.app.data.local.entity.HMProfileEntity
 import com.arer.app.data.local.entity.MonthlyReportEntity
 import com.arer.app.data.local.entity.MonthlyReportItemEntity
 import com.arer.app.data.local.entity.SchoolProfileEntity
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.File
@@ -32,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReportsViewModel @Inject constructor(
     private val calculateMonthlyMdmUseCase: CalculateMonthlyMdmUseCase,
-    schoolRepository: SchoolRepository,
+    private val schoolRepository: SchoolRepository,
     private val mdmRepository: MdmRepository
 ) : ViewModel() {
 
@@ -53,9 +51,6 @@ class ReportsViewModel @Inject constructor(
     val calculationResult: StateFlow<MonthlyMdmCalculationResult?> = _calculationResult.asStateFlow()
 
     val schoolProfile: StateFlow<SchoolProfileEntity?> = schoolRepository.getSchoolProfile()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
-
-    val hmProfile: StateFlow<HMProfileEntity?> = schoolRepository.getHMProfile()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     init {
@@ -93,8 +88,8 @@ class ReportsViewModel @Inject constructor(
         val res = _calculationResult.value ?: return null
         if (res.status != CalculationStatus.SUCCESS) return null
 
-        val school = schoolProfile.first()
-        val hm = hmProfile.first()
+        val school = schoolRepository.getSchoolProfileSync()
+        val hm = schoolRepository.getHMProfileSync()
 
         // Save snapshot to Room
         saveReportSnapshot(res)
@@ -106,8 +101,8 @@ class ReportsViewModel @Inject constructor(
         val res = _calculationResult.value ?: return null
         if (res.status != CalculationStatus.SUCCESS) return null
 
-        val school = schoolProfile.first()
-        val hm = hmProfile.first()
+        val school = schoolRepository.getSchoolProfileSync()
+        val hm = schoolRepository.getHMProfileSync()
 
         // Save snapshot to Room
         saveReportSnapshot(res)
